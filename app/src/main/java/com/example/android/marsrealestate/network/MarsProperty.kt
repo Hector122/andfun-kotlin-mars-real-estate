@@ -17,4 +17,29 @@
 
 package com.example.android.marsrealestate.network
 
-class MarsProperty()
+import android.os.Parcelable
+import androidx.lifecycle.LiveData
+import com.example.android.marsrealestate.overview.MarsApiStatus
+import com.squareup.moshi.Json
+import kotlinx.android.parcel.Parcelize
+
+/**
+ * Gets Mars real estate property information from the Mars API Retrofit service and updates the
+ * [MarsProperty] and [MarsApiStatus] [LiveData]. The Retrofit service returns a coroutine
+ * Deferred, which we await to get the result of the transaction.
+ * @param filter the [MarsApiFilter] that is sent as part of the web server request
+ */ //"price":450000,
+//      "id":"424905",
+//      "type":"buy",
+//      "img_src":"http://mars.jpl.nasa.gov/msl-raw-images/msss/01000/mcam/1000MR0044631300503690E01_DXXX.jpg"
+
+@Parcelize
+data class MarsProperty(val id: String,
+                        val type: String,
+                        @Json(name = "img_src") val imgSrcUrl: String,  //used to map img_src from the JSON to imgSrcUrl in our class
+                        val price: Double) : Parcelable {
+    
+    val isRent get() = type == "rent"
+}
+
+

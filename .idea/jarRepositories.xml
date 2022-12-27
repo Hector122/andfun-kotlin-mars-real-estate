@@ -12,9 +12,15 @@
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
     </remote-repository>
     <remote-repository>
+<<<<<<< HEAD
       <option name="id" value="MavenRepo" />
       <option name="name" value="MavenRepo" />
       <option name="url" value="https://repo.maven.apache.org/maven2/" />
+=======
+      <option name="id" value="BintrayJCenter" />
+      <option name="name" value="BintrayJCenter" />
+      <option name="url" value="https://jcenter.bintray.com/" />
+>>>>>>> 44ffd413aab6530ce5cc606d5a1a08962fbbeff9
     </remote-repository>
     <remote-repository>
       <option name="id" value="Google" />

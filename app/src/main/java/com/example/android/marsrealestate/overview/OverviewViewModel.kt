@@ -40,10 +40,10 @@ class OverviewViewModel : ViewModel() {
         get() = _status
 
 
-    private val _property = MutableLiveData<MarsProperty>()
+    private val _properties = MutableLiveData<List<MarsProperty>>()
 
-    val property: LiveData<MarsProperty>
-        get() = _property
+    val properties: LiveData<List<MarsProperty>>
+        get() = _properties
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -70,7 +70,7 @@ class OverviewViewModel : ViewModel() {
                 _status.value = "Success: ${listResult.size} Mars properties retrieved"
 
                 if(listResult.isNotEmpty()) {
-                    _property.value = listResult[0]
+                    _properties.value = listResult
                 }
             } catch (e: java.lang.Exception) {
                 _status.value = "Failure: " + e.message

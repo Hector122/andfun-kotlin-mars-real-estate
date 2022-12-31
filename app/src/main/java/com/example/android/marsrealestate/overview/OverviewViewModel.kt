@@ -27,16 +27,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
+
+enum class MarsApiStatus { LOADING, ERROR, DONE }
+
 /**
  * The [ViewModel] that is attached to the [OverviewFragment].
  */
 class OverviewViewModel : ViewModel() {
 
     // The internal MutableLiveData String that stores the status of the most recent request
-    private val _status = MutableLiveData<String>()
+    private val _status = MutableLiveData<MarsApiStatus>()
 
     // The external immutable LiveData for the request status String
-    val status: LiveData<String>
+    val status: LiveData<MarsApiStatus>
         get() = _status
 
 
@@ -45,6 +48,19 @@ class OverviewViewModel : ViewModel() {
     val properties: LiveData<List<MarsProperty>>
         get() = _properties
 
+    //nav
+    private val _navigateToSelectedProperty = MutableLiveData<MarsProperty>()
+    val navigateToSelectedProperty: LiveData<MarsProperty> get() = _navigateToSelectedProperty
+
+    fun displayPropertyDetails(marsProperty: MarsProperty) {
+        _navigateToSelectedProperty.value = marsProperty
+    }
+
+    fun displayPropertyDetailsComplete() {
+        _navigateToSelectedProperty.value = null
+    }
+
+    //Coroutines
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
@@ -64,16 +80,18 @@ class OverviewViewModel : ViewModel() {
      * Sets the value of the status LiveData to the Mars API status.
      */
     private fun getMarsRealEstateProperties() {
+        _status.value = MarsApiStatus.LOADING
+
         coroutineScope.launch {
             try {
                 val listResult = MarsApi.retrofitApi.getAllPropertiesAsync()
-                _status.value = "Success: ${listResult.size} Mars properties retrieved"
+                _properties.value = listResult
 
-                if(listResult.isNotEmpty()) {
-                    _properties.value = listResult
-                }
+                _status.value = MarsApiStatus.DONE
             } catch (e: java.lang.Exception) {
-                _status.value = "Failure: " + e.message
+                _status.value = MarsApiStatus.ERROR
+
+                _properties.value = ArrayList()
             }
         }
     }
